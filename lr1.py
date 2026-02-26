@@ -2,6 +2,7 @@ import numpy as np
 import sympy as sp
 import scipy as scp
 import math
+import matplotlib.pyplot as plt
 
 x, y, z = sp.symbols("x, y, z")
 
@@ -92,10 +93,70 @@ def task7(am = 0, aM = 1, am1 = 0, aM1 = 1-x, am2 = 0, aM2 = 1-x-y, expr = x+y+z
           "\nПогрешность:      ", error_est)
 
 def task8(): # Построить графики функций
-    print("\nЗадание 8")
-    print("памагите...")
+    print("\nЗадание 8\nПамагите...")
+
+    plt.figure(figsize=(10, 5), dpi=80)
+    ax = plt.subplot(111)
+
+    # Границы
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+
+    ax.xaxis.set_ticks_position('bottom')
+    ax.spines['bottom'].set_position(('data', 0))
+    ax.yaxis.set_ticks_position('left')
+    ax.spines['left'].set_position(('data', 0))
+
+    def f1(x):
+        return 2 * np.cos(x - np.pi / 4)
+    def f2(x):
+        return x + 3
+
+    # Подготовить данные, использовать распаковку последовательности
+    X = np.linspace(-2*np.pi, 2*np.pi, 256, endpoint=True)
+    C, L = f1(X), f2(X)
 
 
+    plt.plot(X, C, color="blue", linewidth=2.5, linestyle="-", label="Cos Func")
+    plt.plot(X, L, color="red", linewidth=2.5, linestyle="--", label="Line Func")
+
+
+    plt.xlim(X.min() * 1.1, X.max() * 1.1)
+
+    # Изменить метку на оси координат
+    plt.xticks([-2*np.pi, -3*np.pi / 2, -np.pi, -np.pi / 2, 0, np.pi / 2, np.pi, 3*np.pi / 2, 2*np.pi ], [r'$-2\pi$', r'$-3\pi/2$', r'$-\pi$', r'$-\pi/2$', r'$0$', r'$+\pi/2$', r'$+\pi$', r'$+3 \pi/2$', r'$+ 2\pi$' ])
+    plt.yticks([-2, -1, 1, 2], [r'$-2$', r'$-1$', r'$+1$', r'$+2$'])
+
+    plt.ylim(C.min() * 1.1, C.max() * 1.1)
+    # plt.yticks([-2, -1, +1, +2], [r'$-2$', r'$-1$', r'$+1$', r'$+2$'])
+    #добавляем точку
+    # ax.scatter(x=105, y=110, c='g')
+
+
+
+    # Стрелки для осей
+    x_min, x_max = plt.xlim()
+    y_min, y_max = plt.ylim()
+    ax.annotate('', xy=(x_max * 0.95, 0), xytext=(x_max * 0.9, 0), arrowprops=dict(arrowstyle='->', color='black', lw=2))  # Стрелка в конце оси X
+    ax.annotate('', xy=(0, y_max * 0.95), xytext=(0, y_max * 0.9), arrowprops=dict(arrowstyle='->', color='black', lw=2))  # Стрелка для оси Y (вверх)
+
+    # Подписи осей
+    plt.xlabel('    x', labelpad=10) # Вариант 1
+    plt.ylabel('    y')
+    ax.text(x_max, 0, 'x', ha='left', va='center', fontsize=12) # Вариант 2
+    ax.text(0, y_max, 'y', ha='center', va='bottom', fontsize=12)
+
+    # Поиск точки пересечения
+    def diff(x):
+        return f1(x) - f2(x)
+    x_cross = scp.optimize.fsolve(diff, -3.5)[0]  # начальное приближение выбрано по графику
+    y_cross = x_cross + 3
+    # print(f"Точка пересечения: x = {x_cross:.4f}, y = {y_cross:.4f}")
+    ax.scatter([x_cross], [y_cross], color='orange', s=100, zorder=5, label='Точка Пересечения')
+
+    plt.legend(loc='upper right', frameon=False)
+    plt.grid()
+    plt.show()
 # - - - - - - - - - - - - - - - - - - - -
 
 # task1()
